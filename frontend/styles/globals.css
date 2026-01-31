@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 248, 250, 252;
+    --background-start-rgb: 2, 6, 23;
+    --background-end-rgb: 2, 6, 23;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: #020617;
+  font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .glass-panel {
+    @apply backdrop-blur-xl bg-slate-900/60 border border-slate-800/50 shadow-xl;
+  }
+  
+  .glass-button {
+    @apply backdrop-blur-lg bg-indigo-600/90 hover:bg-indigo-500/90 text-white shadow-lg shadow-indigo-500/20 transition-all duration-300;
+  }
+}

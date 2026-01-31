@@ -1,0 +1,463 @@
+openapi: 3.0.0
+info:
+  title: MCP Tools API for AI-Powered Conversational Todo System
+  version: 1.0.0
+  description: API contracts for MCP tools used by AI agents to perform task operations
+
+paths:
+  /api/v1/mcp/add_task:
+    post:
+      summary: Add a new task
+      description: Creates a new task for the authenticated user
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddTaskRequest'
+      responses:
+        '200':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddTaskResponse'
+        '400':
+          description: Bad request - invalid input
+        '401':
+          description: Unauthorized - invalid or missing JWT
+        '403':
+          description: Forbidden - user not authorized to perform this action
+        '500':
+          description: Internal server error
+
+  /api/v1/mcp/list_tasks:
+    get:
+      summary: List user's tasks
+      description: Retrieves a list of tasks for the authenticated user with optional filtering
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: filter_status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [completed, pending, all]
+            default: all
+        - name: filter_priority
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+        - name: search_keyword
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Tasks retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTasksResponse'
+        '401':
+          description: Unauthorized - invalid or missing JWT
+        '403':
+          description: Forbidden - user not authorized to perform this action
+        '500':
+          description: Internal server error
+
+  /api/v1/mcp/complete_task:
+    post:
+      summary: Mark a task as complete/incomplete
+      description: Updates the completion status of a specific task
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteTaskRequest'
+      responses:
+        '200':
+          description: Task completion status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompleteTaskResponse'
+        '400':
+          description: Bad request - invalid input
+        '401':
+          description: Unauthorized - invalid or missing JWT
+        '403':
+          description: Forbidden - user not authorized to perform this action
+        '404':
+          description: Task not found
+        '500':
+          description: Internal server error
+
+  /api/v1/mcp/update_task:
+    post:
+      summary: Update a task
+      description: Updates specified fields of a task
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskRequest'
+      responses:
+        '200':
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTaskResponse'
+        '400':
+          description: Bad request - invalid input
+        '401':
+          description: Unauthorized - invalid or missing JWT
+        '403':
+          description: Forbidden - user not authorized to perform this action
+        '404':
+          description: Task not found
+        '500':
+          description: Internal server error
+
+  /api/v1/mcp/delete_task:
+    post:
+      summary: Delete a task
+      description: Deletes a specific task
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteTaskRequest'
+      responses:
+        '200':
+          description: Task deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteTaskResponse'
+        '400':
+          description: Bad request - invalid input
+        '401':
+          description: Unauthorized - invalid or missing JWT
+        '403':
+          description: Forbidden - user not authorized to perform this action
+        '404':
+          description: Task not found
+        '500':
+          description: Internal server error
+
+  /api/v1/mcp/set_recurring:
+    post:
+      summary: Set recurring pattern for a task
+      description: Sets or updates the recurrence pattern for a specific task
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetRecurringRequest'
+      responses:
+        '200':
+          description: Recurring pattern set successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetRecurringResponse'
+        '400':
+          description: Bad request - invalid input
+        '401':
+          description: Unauthorized - invalid or missing JWT
+        '403':
+          description: Forbidden - user not authorized to perform this action
+        '404':
+          description: Task not found
+        '500':
+          description: Internal server error
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    AddTaskRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Task title
+          maxLength: 200
+        description:
+          type: string
+          description: Task description
+          maxLength: 1000
+          nullable: true
+        due_date:
+          type: string
+          format: date-time
+          description: Due date for the task
+          nullable: true
+        recurrence_pattern:
+          type: string
+          description: Recurrence pattern for the task
+          enum: [daily, weekly, monthly, custom]
+          nullable: true
+        priority:
+          type: integer
+          description: Priority level (1-5, 1 being highest)
+          minimum: 1
+          maximum: 5
+          default: 3
+        tags:
+          type: array
+          items:
+            type: string
+            maxLength: 50
+          description: Tags associated with the task
+          maxItems: 10
+      required:
+        - title
+
+    AddTaskResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the operation was successful
+        task_id:
+          type: string
+          description: ID of the created task
+        message:
+          type: string
+          description: Human-readable message about the operation
+      required:
+        - success
+        - task_id
+        - message
+
+    ListTasksResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the operation was successful
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        count:
+          type: integer
+          description: Total number of tasks matching the filters
+        message:
+          type: string
+          description: Human-readable message about the operation
+      required:
+        - success
+        - tasks
+        - count
+
+    CompleteTaskRequest:
+      type: object
+      properties:
+        task_id:
+          type: string
+          description: ID of the task to update
+        completed:
+          type: boolean
+          description: New completion status for the task
+          default: true
+      required:
+        - task_id
+        - completed
+
+    CompleteTaskResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the operation was successful
+        message:
+          type: string
+          description: Human-readable message about the operation
+      required:
+        - success
+        - message
+
+    UpdateTaskRequest:
+      type: object
+      properties:
+        task_id:
+          type: string
+          description: ID of the task to update
+        title:
+          type: string
+          description: New task title
+          maxLength: 200
+          nullable: true
+        description:
+          type: string
+          description: New task description
+          maxLength: 1000
+          nullable: true
+        due_date:
+          type: string
+          format: date-time
+          description: New due date for the task
+          nullable: true
+        recurrence_pattern:
+          type: string
+          description: New recurrence pattern for the task
+          enum: [daily, weekly, monthly, custom]
+          nullable: true
+        priority:
+          type: integer
+          description: New priority level (1-5, 1 being highest)
+          minimum: 1
+          maximum: 5
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+            maxLength: 50
+          description: New tags associated with the task
+          maxItems: 10
+          nullable: true
+      required:
+        - task_id
+
+    UpdateTaskResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the operation was successful
+        message:
+          type: string
+          description: Human-readable message about the operation
+      required:
+        - success
+        - message
+
+    DeleteTaskRequest:
+      type: object
+      properties:
+        task_id:
+          type: string
+          description: ID of the task to delete
+      required:
+        - task_id
+
+    DeleteTaskResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the operation was successful
+        message:
+          type: string
+          description: Human-readable message about the operation
+      required:
+        - success
+        - message
+
+    SetRecurringRequest:
+      type: object
+      properties:
+        task_id:
+          type: string
+          description: ID of the task to update
+        pattern:
+          type: string
+          description: Recurrence pattern to set
+          enum: [daily, weekly, monthly]
+      required:
+        - task_id
+        - pattern
+
+    SetRecurringResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the operation was successful
+        message:
+          type: string
+          description: Human-readable message about the operation
+      required:
+        - success
+        - message
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the task
+        title:
+          type: string
+          description: Task title
+        description:
+          type: string
+          description: Task description
+          nullable: true
+        completed:
+          type: boolean
+          description: Indicates if the task is completed
+        priority:
+          type: integer
+          description: Priority level (1-5, 1 being highest)
+        due_date:
+          type: string
+          format: date-time
+          description: Due date for the task
+          nullable: true
+        recurrence_pattern:
+          type: string
+          description: Recurrence pattern for the task
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+          description: Tags associated with the task
+        user_id:
+          type: string
+          description: ID of the user who owns the task
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp of task creation
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp of last update
+      required:
+        - id
+        - title
+        - completed
+        - priority
+        - user_id
+        - created_at
+        - updated_at

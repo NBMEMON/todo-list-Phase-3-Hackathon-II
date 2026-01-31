@@ -1,0 +1,150 @@
+openapi: 3.0.0
+info:
+  title: Conversational AI API for Todo System
+  version: 1.0.0
+  description: API contracts for the conversational AI interface
+
+paths:
+  /api/v1/chat/process:
+    post:
+      summary: Process user message in conversation
+      description: Sends a user message to the AI assistant and receives a response
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatProcessRequest'
+      responses:
+        '200':
+          description: Message processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChatProcessResponse'
+        '400':
+          description: Bad request - invalid input
+        '401':
+          description: Unauthorized - invalid or missing JWT
+        '500':
+          description: Internal server error
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ChatProcessRequest:
+      type: object
+      properties:
+        message:
+          type: string
+          description: The user's message to process
+          maxLength: 10000
+        session_id:
+          type: string
+          description: Optional session ID to continue a conversation
+          nullable: true
+        language:
+          type: string
+          description: Preferred language for the response
+          enum: [auto, en, ur]
+          default: auto
+      required:
+        - message
+
+    ChatProcessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Indicates if the operation was successful
+        response:
+          type: string
+          description: The AI-generated response to the user
+        action_taken:
+          type: string
+          description: The action taken by the AI (e.g., "task_created", "task_updated", "task_listed")
+          nullable: true
+        session_id:
+          type: string
+          description: The session ID for continuing the conversation
+        language:
+          type: string
+          description: The language of the response
+          enum: [en, ur]
+        task_info:
+          $ref: '#/components/schemas/Task'
+          description: Information about a task if relevant to the response
+          nullable: true
+        tasks_list:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+          description: List of tasks if relevant to the response
+          nullable: true
+      required:
+        - success
+        - response
+        - session_id
+        - language
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the task
+        title:
+          type: string
+          description: Task title
+        description:
+          type: string
+          description: Task description
+          nullable: true
+        completed:
+          type: boolean
+          description: Indicates if the task is completed
+        priority:
+          type: integer
+          description: Priority level (1-5, 1 being highest)
+        due_date:
+          type: string
+          format: date-time
+          description: Due date for the task
+          nullable: true
+        recurrence_pattern:
+          type: string
+          description: Recurrence pattern for the task
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+            maxLength: 50
+          description: Tags associated with the task
+          maxItems: 10
+        user_id:
+          type: string
+          description: ID of the user who owns the task
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp of task creation
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp of last update
+      required:
+        - id
+        - title
+        - completed
+        - priority
+        - user_id
+        - created_at
+        - updated_at
