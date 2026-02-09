@@ -1,0 +1,53 @@
+# Multilingual Response Templates
+
+## English Templates
+
+### Success Responses
+- add_task_success: "{emoji} {title} has been added to your tasks!"
+- list_tasks_empty: "{emoji} You don't have any tasks yet. Add one by saying 'Add a task to ...'"
+- list_tasks_single: "{emoji} You have 1 task: {task_info}"
+- list_tasks_multiple: "{emoji} You have {count} tasks: {task_list}"
+- complete_task_success: "{emoji} Task '{title}' has been marked as complete!"
+- update_task_success: "{emoji} Task has been updated!"
+- delete_task_success: "{emoji} Task has been deleted!"
+- set_recurring_success: "{emoji} Task will repeat {pattern}!"
+
+### Error Responses
+- add_task_error: "{emoji} Sorry, I couldn't add that task: {message}"
+- complete_task_error: "{emoji} Sorry, I couldn't mark that task as complete: {message}"
+- update_task_error: "{emoji} Sorry, I couldn't update that task: {message}"
+- delete_task_error: "{emoji} Sorry, I couldn't delete that task: {message}"
+- set_recurring_error: "{emoji} Sorry, I couldn't set the recurring pattern: {message}"
+
+### General Responses
+- unknown_intent: "{emoji} I'm not sure what you mean. Could you try rephrasing?"
+- error_generic: "{emoji} Something went wrong: {message}"
+- clarification_needed: "{emoji} I need a bit more information. What task would you like to {action}?"
+- greeting: "Hello! I'm your AI assistant. You can ask me to add, update, or manage your tasks."
+- help: "I can help you manage your tasks. Try saying: 'Add a task to buy groceries', 'Show my tasks', or 'Mark task as complete'."
+
+## Urdu Templates
+
+### Success Responses
+- add_task_success: "{emoji} آپ کے کاموں میں {title} شامل کر دیا گیا ہے!"
+- list_tasks_empty: "{emoji} آپ کے پاس ابھی تک کوئی کام نہیں ہے۔ کوئی کام شامل کرنے کے لیے کہیں 'کام شامل کریں ...'"
+- list_tasks_single: "{emoji} آپ کے پاس 1 کام ہے: {task_info}"
+- list_tasks_multiple: "{emoji} آپ کے پاس {count} کام ہیں: {task_list}"
+- complete_task_success: "{emoji} کام '{title}' مکمل کے بطور نشان زد کر دیا گیا ہے!"
+- update_task_success: "{emoji} کام کو اپ ڈیٹ کر دیا گیا ہے!"
+- delete_task_success: "{emoji} کام حذف کر دیا گیا ہے!"
+- set_recurring_success: "{emoji} کام {pattern} دہرایا جائے گا!"
+
+### Error Responses
+- add_task_error: "{emoji} معذرت، میں وہ کام شامل نہیں کر سکا: {message}"
+- complete_task_error: "{emoji} معذرت، میں وہ کام مکمل کے بطور نشان زد نہیں کر سکا: {message}"
+- update_task_error: "{emoji} معذرت، میں وہ کام اپ ڈیٹ نہیں کر سکا: {message}"
+- delete_task_error: "{emoji} معذرت، میں وہ کام حذف نہیں کر سکا: {message}"
+- set_recurring_error: "{emoji} معذرت، میں دہرائی کا پیٹرن سیٹ نہیں کر سکا: {message}"
+
+### General Responses
+- unknown_intent: "{emoji} مجھے سمجھ نہیں آ رہی کہ آپ کیا کہنا چاہتے ہیں۔ کیا آپ دوبارہ بیان کر سکتے ہیں؟"
+- error_generic: "{emoji} کچھ غلط ہو گیا: {message}"
+- clarification_needed: "{emoji} مجھے مزید معلومات درکار ہیں۔ آپ کون سا کام {action} چاہتے ہیں؟"
+- greeting: "ہیلو! میں آپ کا AI اسسٹنٹ ہوں۔ آپ مجھ سے کاموں کو شامل، اپ ڈیٹ، یا منظم کرنے کے لیے کہہ سکتے ہیں۔"
+- help: "میں آپ کے کاموں کو منظم کرنے میں مدد کر سکتا ہوں۔ کہنے کی کوشش کریں: 'کام شامل کریں تاکہ خریداری کریں'، 'میرے کام دکھائیں'، یا 'کام کو مکمل کے بطور نشان لگائیں'۔"
