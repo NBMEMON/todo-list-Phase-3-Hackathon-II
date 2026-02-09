@@ -76,6 +76,6 @@ if __name__ == "__main__":
     import uvicorn
     demo.launch(server_name="0.0.0.0", server_port=7860, show_error=True)
 else:
-    # Mount the Gradio app to the FastAPI app for Hugging Face Spaces
+    # Mount the Gradio app to the FastAPI app for Hugging Face Spaces at /ui path
     import gradio as gr
-    app = gr.mount_gradio_app(app, demo, path="/")
+    app = gr.mount_gradio_app(app, demo, path="/ui")
