@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -10,6 +10,26 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const { theme } = useTheme();
+
+  const [isDesktop, setIsDesktop] = useState(true);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+
+    // Initial check
+    if (typeof window !== 'undefined') {
+      handleResize();
+      window.addEventListener('resize', handleResize);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', handleResize);
+      }
+    };
+  }, []);
 
   const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: '📊' },
@@ -33,10 +53,10 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <AnimatePresence>
-        {(isOpen || window.innerWidth >= 768) && (
+        {(isOpen || isDesktop) && (
           <>
             {/* Overlay for mobile */}
-            {isOpen && window.innerWidth < 768 && (
+            {isOpen && !isDesktop && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
